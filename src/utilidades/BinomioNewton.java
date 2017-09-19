@@ -4,23 +4,22 @@ public class BinomioNewton {
 	private int grado;
 	private double x;
 	private double b;
-	private double[][] tartaglia;
+	private double[][] tarta;
 	
-	//Constructores
+
 	public BinomioNewton(int grado, double x, double b) {
 		super();
 		this.grado = grado;
 		this.x = x;
 		this.b = b;
-		this.tartaglia = new double[grado + 1][grado + 1];
+		this.tarta = new double[grado + 1][grado + 1];
 	}
 	
 	public BinomioNewton(int grado) {
 		super();
 		this.grado = grado;
 		this.x = this.b = 0;
-		// para utilizar con tartaglia memorizado
-		tartaglia = new double[grado + 1][grado + 1];
+		this.tarta = new double[grado + 1][grado + 1];
 	}
 
 	public BinomioNewton() {
@@ -44,10 +43,10 @@ public class BinomioNewton {
 		double retorno = 0;
 		for (int i = 0; i <= this.getGrado(); i++) {
 			if (i % 2 != 0)
-				retorno = potenciaRecursiva((this.getX() * x) + this.getB(),this.getGrado());// Impar
+				retorno = potenciaRecursiva((this.getX() * x) + this.getB(),this.getGrado());
 			else
-				retorno = potenciaRecursivaPar((this.getX() * x) + this.getB(),this.getGrado());// Par
-		} // O(n) y anidada con la recursiva es O(n2)
+				retorno = potenciaRecursivaPar((this.getX() * x) + this.getB(),this.getGrado());
+		} 
 
 		return retorno;
 	}
@@ -76,45 +75,43 @@ public class BinomioNewton {
 		double retorno = 0;
 		if (this.getGrado() == 0)
 			return coeficientes[0];
-		retorno = coeficientes[0] * x + coeficientes[1]; // O(1)
+		retorno = coeficientes[0] * x + coeficientes[1];
 		for (int i = 2; i <= this.getGrado(); i++)
-			retorno = (retorno * x) + coeficientes[i];// O(n-2) = O(n)
+			retorno = (retorno * x) + coeficientes[i];
 		return retorno;
 	}
 
 	public double[] obtenerTerminosTarta(int nivel) {
-		// Si ya esta calculado, entonces lo devuelvo
-		if (tartaglia[nivel - 1][0] != 0)
-			return tartaglia[nivel - 1];
+		
+		if (tarta[nivel - 1][0] != 0)
+			return tarta[nivel - 1];
 		for (int i = 0; i < nivel; i++) {
-			// SI el nivel esta calculado, entonces lo paso.
-			if (tartaglia[i][0] == 0) {
-				tartaglia[i][0] = 1;
+			if (tarta[i][0] == 0) {
+				tarta[i][0] = 1;
 				for (int j = 1; j <= i; j++)
-					tartaglia[i][j] = Double.valueOf(tartaglia[i - 1][j - 1]
-							+ tartaglia[i - 1][j]);
+					tarta[i][j] = Double.valueOf(tarta[i - 1][j - 1]
+							+ tarta[i - 1][j]);
 			}
 		}
-		return tartaglia[nivel - 1];
+		return tarta[nivel - 1];
 	}
 
 	public String mostrarBinomioResuelto() {
-		StringBuffer sb = new StringBuffer();
-		double[] terminos = obtenerTerminosTarta(this.getGrado() + 1);// ACa es mas uno porque la cantidad de terminos es igual al nivel +1
+		StringBuffer buffer = new StringBuffer();
+		double[] terminos = obtenerTerminosTarta(this.getGrado() + 1);
 		double temporal;
 		for (int i = 0, j = this.getGrado(); i <= this.getGrado(); j--, i++) {
 			temporal = terminos[i] * Math.pow(this.getX(), j) * Math.pow(this.getB(), i);
 			if (temporal > 0)
-				sb.append("+");
-			sb.append(temporal);
-			sb.append("X");
-			sb.append(j);
+				buffer.append("+");
+			buffer.append(temporal);
+			buffer.append("X");
+			buffer.append(j);
 		}
-		return sb.toString();
+		return buffer.toString();
 	}
 
 	public double resolverBinomio() {
-		// Resuelve con metodo POW y
 		double retorno = 0;
 		double[] terminos = new double[this.getGrado() + 1];
 		terminos = obtenerTerminosTarta(this.getGrado() + 1);
@@ -124,7 +121,6 @@ public class BinomioNewton {
 		return retorno;
 	}
 
-	// METODO
 	public double resolverBinomio(final double x, final double b, final int grado, double valor) {
 		double retorno = 0;
 		double[] terminos = new double[grado];
@@ -158,8 +154,8 @@ public class BinomioNewton {
 		if (potencia == 0)
 			return 1;
 		if ((potencia % 2) == 0)
-			return potenciaRecursivaPar(numero * numero, potencia / 2); // Exponente Par
-		return numero * potenciaRecursivaPar(numero, potencia - 1);// Exponente Impar
+			return potenciaRecursivaPar(numero * numero, potencia / 2); 
+		return numero * potenciaRecursivaPar(numero, potencia - 1);
 	}
 
 	public int getGrado() {
@@ -186,11 +182,11 @@ public class BinomioNewton {
 		this.b = coeficienteB;
 	}
 
-	public double[][] tartaglia() {
-		return tartaglia;
+	public double[][] tarta() {
+		return tarta;
 	}
 
-	public void setTartaglia(double[][] tartaglia) {
-		this.tartaglia = tartaglia;
+	public void setTartaglia(double[][] tarta) {
+		this.tarta = tarta;
 	}
 }
